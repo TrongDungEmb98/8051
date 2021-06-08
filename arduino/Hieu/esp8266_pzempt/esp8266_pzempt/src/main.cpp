@@ -35,7 +35,24 @@ void setup()
     database_load();
 
     mqtt_init();
-    // Blynk.begin(auth, ssid, password);
+    
+    memset(m_device.data[0].energy, 0 ,sizeof(m_device.data[0].energy));
+    memset(m_device.data[1].energy, 0 ,sizeof(m_device.data[1].energy));
+    memset(m_device.data[2].energy, 0 ,sizeof(m_device.data[2].energy));
+    memset(m_device.data[3].energy, 0 ,sizeof(m_device.data[3].energy));
+    memset(m_device.data[4].energy, 0 ,sizeof(m_device.data[4].energy));
+
+    sprintf(m_device.data[0].energy, "127");
+    sprintf(m_device.data[1].energy, "145");
+    sprintf(m_device.data[2].energy, "114");
+    sprintf(m_device.data[3].energy, "153");
+    sprintf(m_device.data[4].energy, "178");
+
+    m_device.data[0].water = 1245;
+    m_device.data[1].water = 1294;
+    m_device.data[2].water = 1522;
+    m_device.data[3].water = 1390;
+    m_device.data[4].water = 1782;
 }
 
 void loop()
@@ -54,22 +71,14 @@ String current_energy;
 void update_database(JsonDocument &doc)
 {
     current_energy = doc["energy"].as<String>();
-    current_water_used = doc["water_mililites"].as<int16_t>();
+    current_water_used = doc["water"].as<int16_t>();
 
     if (atof(current_energy.c_str()) != 0) {
-        memset(m_device.data[m_device.current_month-1].energy, 0, 100);
-        sprintf(m_device.data[m_device.current_month-1].energy, "%s", current_energy.c_str());
+        memset(m_device.data[5].energy, 0, 100);
+        sprintf(m_device.data[5].energy, "%s", current_energy.c_str());
     }
 
-    m_device.data[m_device.current_month-1].water = current_water_used;
+    m_device.data[5].water = current_water_used;
 
-    // Serial.printf("water: %d\n", m_device.data[m_device.current_month-1].water);
-    // Serial.printf("engergy: %f\n", atof(m_device.data[m_device.current_month-1].energy));
-
-    // Blynk.virtualWrite(water_sensor_blynk_pin,
-    //                     m_device.data[m_device.current_month-1].water);
-    // Blynk.virtualWrite(power_sensor_blynk_pin,
-    //                     atof(m_device.data[m_device.current_month-1].energy));
-    
     sync_database_request = 1;
 }

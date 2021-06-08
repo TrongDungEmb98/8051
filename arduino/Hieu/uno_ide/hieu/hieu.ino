@@ -106,7 +106,7 @@ void read_water_loop(void)
 
         // Add the millilitres passed in this second to the cumulative total
         totalMilliLitres += flowMilliLitres;
-        totalLitres += flowLitres;
+        totalLitres = totalMilliLitres / 1000;
     }
 }
 
@@ -127,7 +127,7 @@ void post_inform_to_server(void)
     int tmpInt2 = trunc(tmpFrac * 10000);  // Turn into integer (123).
 
     memset(buff, 0, 512);
-    sprintf(buff, "{\"cmd\":%d, \"energy\":\"%d.%03d\", \"water_mililites\": %d}",\
+    sprintf(buff, "{\"cmd\":%d, \"energy\":\"%d.%03d\", \"water\": %d}",\
                     CMD_POST_DATA, tmpInt1, tmpInt2, totalMilliLitres);
     Serial.println(buff);
 }

@@ -27,9 +27,10 @@ void uart_handler(void)
     if (Serial.available() > 0) {
         while (Serial.available() > 0) {
             ch = Serial.read();
-
-            hc06_rx_queue[p_hc06_rx_data] = ch;
-            p_hc06_rx_data++;
+            if (p_hc06_rx_data < 512) {
+                hc06_rx_queue[p_hc06_rx_data] = ch;
+                p_hc06_rx_data++;
+            }
 
             delay(1); /*1ms */
         }
